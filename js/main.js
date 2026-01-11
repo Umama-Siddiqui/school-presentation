@@ -13,46 +13,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Mobile Dropdown Toggle
   const navItems = document.querySelectorAll(".nav-item");
+
   navItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      if (window.innerWidth <= 768) {
-        const dropdown = item.querySelector(".dropdown-menu");
-        if (dropdown) {
-          dropdown.style.display =
-            dropdown.style.display === "block" ? "none" : "block";
+    // Check if item has a dropdown
+    const dropdown = item.querySelector(".dropdown-menu");
+    if (dropdown) {
+      const link = item.querySelector("a");
+
+      link.addEventListener("click", (e) => {
+        if (window.innerWidth <= 992) {
+          e.preventDefault(); // Prevent navigation on mobile for dropdown parents
+          dropdown.classList.toggle("active");
+
+          // Close other dropdowns
+          navItems.forEach((otherItem) => {
+            if (otherItem !== item) {
+              const otherDropdown = otherItem.querySelector(".dropdown-menu");
+              if (otherDropdown) {
+                otherDropdown.classList.remove("active");
+              }
+            }
+          });
         }
-      }
-    });
-  });
-  // Sticky Header on Scroll
-  window.addEventListener("scroll", () => {
-    const header = document.querySelector("header");
-    if (window.scrollY > 50) {
-      header.style.padding = "15px 0";
-      header.style.background = "rgba(255, 255, 255, 0.98)";
-    } else {
-      header.style.padding = "5px";
+      });
     }
   });
 
-
-
-  hamburger.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
+  // Sticky Header on Scroll (Optional class toggle)
+  window.addEventListener("scroll", () => {
+    const header = document.querySelector("header");
+    if (window.scrollY > 50) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
   });
 
-  // Dropdown Toggle for Mobile (Optional)
-  document.querySelectorAll(".nav-item").forEach((item) => {
-    item.addEventListener("click", function (e) {
-      if (window.innerWidth < 992) {
-        const dropdown = this.querySelector(".dropdown-menu");
-        if (dropdown) {
-          dropdown.style.display =
-            dropdown.style.display === "block" ? "none" : "block";
-        }
-      }
-    });
-  });
+  // Scroll Animation Logic
   window.addEventListener('scroll', () => {
     const cards = document.querySelectorAll('.ep-card, .ep-feature-card');
     cards.forEach(card => {
@@ -71,19 +68,22 @@ document.addEventListener("DOMContentLoaded", () => {
     c.style.transition = 'all 0.6s ease-out';
   });
 
+  // Pricing Plan Toggle
   const toggle = document.getElementById('prc-plan-toggle');
   const oneTimeSection = document.getElementById('prc-onetime-content');
   const saasSection = document.getElementById('prc-saas-content');
 
-  toggle.addEventListener('change', function () {
-    if (this.checked) {
-      // SaaS selected
-      oneTimeSection.classList.remove('active');
-      saasSection.classList.add('active');
-    } else {
-      // One Time selected
-      saasSection.classList.remove('active');
-      oneTimeSection.classList.add('active');
-    }
-  });
+  if (toggle && oneTimeSection && saasSection) {
+    toggle.addEventListener('change', function () {
+      if (this.checked) {
+        // SaaS selected
+        oneTimeSection.classList.remove('active');
+        saasSection.classList.add('active');
+      } else {
+        // One Time selected
+        saasSection.classList.remove('active');
+        oneTimeSection.classList.add('active');
+      }
+    });
+  }
 });
